@@ -17,15 +17,23 @@ let store: Awaited<ReturnType<typeof load>> | null = null;
 
 
 async function getStore() {
-    if (!store) {
-        store = await load('user-store.json', {autoSave: true});
+    try {
+        if (!store) {
+            store = await load('user-store.json', {autoSave: true});
+        }
+        return store;
+    } catch (error) {
+        console.error('Failed to get store:', error);
+        throw error;
     }
-    return store;
+
 }
 
 
 export async function login(provider: 'google' | 'github' | 'discourse'): Promise<User> {
     try {
+        console.log('calling login_with_provider', currentUser);
+
         const userInfo = await invoke<{
             id: string;
             name: string;
@@ -34,6 +42,7 @@ export async function login(provider: 'google' | 'github' | 'discourse'): Promis
             provider: string;
             access_token: string;
         }>('login_with_provider', {provider});
+        console.log('called login_with_provider', currentUser);
 
         currentUser = {
             id: userInfo.id,
@@ -43,6 +52,7 @@ export async function login(provider: 'google' | 'github' | 'discourse'): Promis
             provider: userInfo.provider as 'google' | 'github' | 'discourse',
             accessToken: userInfo.access_token,
         };
+        console.log('User logged in:', currentUser);
 
         // Store user in Tauri Store
         const store = await getStore();

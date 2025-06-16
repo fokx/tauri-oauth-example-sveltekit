@@ -24,7 +24,10 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri-plugin-oauth = { git = "https://github.com/FabianLars/tauri-plugin-oauth", branch = "v2" }
 tauri-plugin-shell = "2"
-reqwest= { version = "0.12.20", default-features = false,features = ["charset", "http2", "json", "macos-system-configuration", "rustls-tls", "blocking", "socks", "cookies", "brotli", "gzip", "deflate", "zstd"] }
+reqwest = { version = "0.12.20", default-features = false, features = ["charset", "http2", "json", "macos-system-configuration", "rustls-tls", "blocking", "socks", "cookies", "brotli", "gzip", "deflate", "zstd"] }
 url = "2.4"
 rand = "0.9.1"
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+obfstr = "0.4.4"
+dotenvy = "0.15.7"
+dotenvy_macro = "0.15.7"
