@@ -21,6 +21,7 @@
     "@tauri-apps/plugin-store": "^2.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "flowbite-svelte": "^1.7.1",
     "lucide-svelte": "^0.503.0",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.4",

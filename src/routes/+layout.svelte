@@ -1,17 +1,18 @@
 <script>
-  import '../app.css';
-  import {page} from '$app/stores';
-  import {goto} from '$app/navigation';
-  import {onMount} from 'svelte';
-  import {getCurrentUser} from '$lib/services/auth';
+    import '../app.css';
+    import {page} from '$app/state';
+    import {goto} from '$app/navigation';
+    import {onMount} from 'svelte';
 
-  let isLoading = true;
+    import {getCurrentUser} from '$lib/services/auth';
+
+    let isLoading = true;
 
     onMount(async () => {
         try {
             const user = await getCurrentUser();
             const isAuthenticated = user !== null;
-            const currentPath = $page.url.pathname;
+            const currentPath = page.url.pathname;
 
             // Handle authentication redirects
             if (currentPath === '/' && isAuthenticated) {

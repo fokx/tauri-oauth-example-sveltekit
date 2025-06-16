@@ -1,12 +1,10 @@
 <script lang="ts">
-  import {goto} from '$app/navigation';
-  import {onMount} from 'svelte';
-  import {Button} from '$lib/components/ui/button';
-  import {Avatar, AvatarFallback, AvatarImage} from '$lib/components/ui/avatar';
-  import {Card, CardContent, CardHeader, CardTitle} from '$lib/components/ui/card';
-  import {getCurrentUser, logout as authLogout, type User} from '$lib/services/auth';
+    import {goto} from '$app/navigation';
+    import {onMount} from 'svelte';
+    import {Avatar, Button, Card, Heading} from 'flowbite-svelte';
+    import {getCurrentUser, logout as authLogout, type User} from '$lib/services/auth';
 
-  let user: User | null = null;
+    let user: User | null = null;
 
     onMount(async () => {
         try {
@@ -36,17 +34,17 @@
 </script>
 
 <div class="flex flex-col items-center justify-center min-h-screen bg-background p-4">
-    <Card class="w-full max-w-md">
-        <CardHeader>
-            <CardTitle class="text-center">Home</CardTitle>
-        </CardHeader>
-        <CardContent class="flex flex-col items-center gap-6">
+    <Card class="max-w-[vw] p-6 ms-0.5 me-0.5 dark:text-gray-200">
+        <Heading>
+            <span class="text-center">Home</span>
+        </Heading>
+        <div class="flex flex-col items-center gap-6">
             <Avatar class="w-24 h-24">
                 Avatar: {user?.avatar}
                 {#if user?.avatar}
-                    <AvatarImage src={user.avatar} alt={`${user.name}'s Avatar`}/>
+                    <img src={user.avatar} alt={`${user.name}'s Avatar`}/>
                 {/if}
-                <AvatarFallback>{getInitials(user?.name || 'User')}</AvatarFallback>
+                <div>{getInitials(user?.name || 'User')}</div>
             </Avatar>
 
             <div class="text-center">
@@ -59,9 +57,9 @@
                 {/if}
             </div>
 
-            <Button on:click={handleLogout} variant="destructive">
+            <Button onclick={handleLogout}>
                 Logout
             </Button>
-        </CardContent>
+        </div>
     </Card>
 </div>

@@ -1,7 +1,6 @@
 <script lang="ts">
     import {goto} from '$app/navigation';
-    import {Button} from '$lib/components/ui/button';
-    import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '$lib/components/ui/card';
+    import {Button, Card, Heading} from 'flowbite-svelte';
     import {login} from '$lib/services/auth';
 
     let isGoogleLoading = $state(false);
@@ -61,15 +60,13 @@
 </script>
 
 <div class="flex items-center justify-center min-h-screen bg-background">
-    <Card class="w-full max-w-sm">
-        <CardHeader>
-            <CardTitle class="text-2xl font-bold text-center">Login</CardTitle>
-            <CardDescription class="text-center">
-                Choose a way to login
-            </CardDescription>
-        </CardHeader>
-        <CardContent class="grid gap-4">
-            <Button disabled={isLoading} on:click={loginWithGoogle} variant="outline">
+    <Card class="max-w-[vw] p-6 ms-0.5 me-0.5 dark:text-gray-200">
+        <Heading class="text-2xl font-bold text-center">Login</Heading>
+        <p class="text-center">
+            Choose a way to login
+        </p>
+        <div class="grid gap-4">
+            <Button disabled={isLoading} onclick={loginWithGoogle}>
                 {#if !isGoogleLoading}
                     <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="16px">
                         <path fill="#FFC107"
@@ -86,7 +83,7 @@
                 {/if}
                 Google Login
             </Button>
-            <Button disabled={isLoading} on:click={loginWithGithub} variant="outline">
+            <Button disabled={isLoading} onclick={loginWithGithub}>
                 {#if !isGithubLoading}
                     <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16"
                          height="16">
@@ -98,7 +95,7 @@
                 {/if}
                 GitHub Login
             </Button>
-            <Button disabled={isLoading} on:click={loginWithDiscourse} variant="outline">
+            <Button disabled={isLoading} onclick={loginWithDiscourse}>
                 {#if !isDiscourseLoading}
                     <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 104 106" width="16">
                         <path fill="#231f20"
@@ -122,6 +119,6 @@
             {#if errorMessage}
                 <p class="text-red-500 text-center mt-2">{errorMessage}</p>
             {/if}
-        </CardContent>
+        </div>
     </Card>
 </div>
