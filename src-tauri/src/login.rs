@@ -17,6 +17,7 @@ pub struct OAuthConfig {
 pub struct OAuthConfigs {
     pub google: OAuthConfig,
     pub github: OAuthConfig,
+    pub discourse: OAuthConfig,
 }
 
 #[derive(Serialize)]
@@ -37,6 +38,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
     let config = match provider.as_str() {
         "google" => configs.google,
         "github" => configs.github,
+        "discourse" => configs.discourse,
         _ => return Err(format!("Unsupported provider: {}", provider)),
     };
 
@@ -66,6 +68,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
 
     // Build the authorization URL
     let mut auth_url_obj = Url::parse(&config.auth_url).map_err(|err| err.to_string())?;
+    println!("redirect_uri: {:?}", &format!("http://localhost:{}", port));
     auth_url_obj.query_pairs_mut()
             .append_pair("client_id", &config.client_id)
             .append_pair("redirect_uri", &format!("http://localhost:{}", port))
@@ -98,7 +101,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
             .await
             .map_err(|err| err.to_string())?;
 
-    print!("token_response: {:?}", token_response);
+    println!("token_response: {:?}", token_response);
     if !token_response.status().is_success() {
         return Err(format!("Failed to exchange code for token: {}", token_response.status()));
     }
@@ -106,7 +109,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
     let token_data: serde_json::Value = token_response.json().await.map_err(|err| err.to_string())?;
     let access_token = token_data["access_token"].as_str().ok_or("No access token found")?;
 
-    print!("access_token: {:?}", access_token);
+    println!("access_token: {:?}", access_token);
 
     // Get user info
     let user_info_response = match provider.as_str() {
@@ -118,6 +121,12 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
         "github" => client.get(&config.user_info_url)
                 .header("Authorization", format!("Bearer {}", access_token))
                 .header("Accept", "application/vnd.github.v3+json")
+                .header("User-Agent", "tauri-app")
+                .send()
+                .await,
+        "discourse" => client.get(&config.user_info_url)
+                .header("Authorization", format!("Bearer {}", access_token))
+                .header("Accept", "application/json")
                 .header("User-Agent", "tauri-app")
                 .send()
                 .await,
@@ -145,6 +154,12 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
             user_info["email"].as_str().unwrap_or("").to_string(),
             user_info["avatar_url"].as_str().map(|s| s.to_string()),
         ),
+        "discourse" => (
+            user_info["id"].to_string(),
+            user_info["name"].as_str().unwrap_or_else(|| user_info["login"].as_str().unwrap_or("")).to_string(),
+            user_info["email"].as_str().unwrap_or("").to_string(),
+            user_info["avatar_url"].as_str().map(|s| s.to_string()),
+        ),
         _ => return Err(format!("Unsupported provider: {}", provider)),
     };
 
@@ -160,13 +175,13 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
 
 // Helper function to generate a random string
 fn generate_random_string(length: usize) -> String {
-    use rand::{thread_rng, Rng};
+    use rand::{rng, Rng};
     const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let mut rng = thread_rng();
+    let mut rng = rng();
 
     (0..length)
             .map(|_| {
-                let idx = rng.gen_range(0..CHARSET.len());
+                let idx = rng.random_range(0..CHARSET.len());
                 CHARSET[idx] as char
             })
             .collect()

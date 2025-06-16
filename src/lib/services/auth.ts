@@ -24,7 +24,7 @@ async function getStore() {
 }
 
 
-export async function login(provider: 'google' | 'github'): Promise<User> {
+export async function login(provider: 'google' | 'github' | 'discourse'): Promise<User> {
     try {
         const userInfo = await invoke<{
             id: string;
@@ -40,7 +40,7 @@ export async function login(provider: 'google' | 'github'): Promise<User> {
             name: userInfo.name,
             email: userInfo.email,
             avatar: userInfo.avatar || undefined,
-            provider: userInfo.provider as 'google' | 'github',
+            provider: userInfo.provider as 'google' | 'github' | 'discourse',
             accessToken: userInfo.access_token,
         };
 

@@ -1,13 +1,14 @@
 <script lang="ts">
-  import {goto} from '$app/navigation';
-  import {Button} from '$lib/components/ui/button';
-  import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '$lib/components/ui/card';
-  import {login} from '$lib/services/auth';
+    import {goto} from '$app/navigation';
+    import {Button} from '$lib/components/ui/button';
+    import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '$lib/components/ui/card';
+    import {login} from '$lib/services/auth';
 
-  let isGoogleLoading = $state(false);
+    let isGoogleLoading = $state(false);
     let isGithubLoading = $state(false);
+    let isDiscourseLoading = $state(false);
     let errorMessage = $state('');
-    let isLoading = $derived(isGoogleLoading || isGithubLoading);
+    let isLoading = $derived(isGoogleLoading || isGithubLoading || isDiscourseLoading);
 
     async function loginWithGoogle() {
         try {
@@ -41,6 +42,22 @@
         }
     }
 
+    async function loginWithDiscourse() {
+        try {
+            errorMessage = '';
+            isDiscourseLoading = true;
+
+            await login('discourse');
+
+            goto('/home');
+        } catch (error) {
+            console.error('Discourse login failed:', error);
+            errorMessage = 'Discourse login failed, please retry';
+        } finally {
+            isDiscourseLoading = false;
+        }
+    }
+
 </script>
 
 <div class="flex items-center justify-center min-h-screen bg-background">
@@ -54,8 +71,7 @@
         <CardContent class="grid gap-4">
             <Button disabled={isLoading} on:click={loginWithGoogle} variant="outline">
                 {#if !isGoogleLoading}
-                    <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px"
-                         height="48px">
+                    <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="16px">
                         <path fill="#FFC107"
                               d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
                         <path fill="#FF3D00"
@@ -81,6 +97,27 @@
                     <span class="animate-spin mr-2">⟳</span>
                 {/if}
                 GitHub Login
+            </Button>
+            <Button disabled={isLoading} on:click={loginWithDiscourse} variant="outline">
+                {#if !isDiscourseLoading}
+                    <svg class="mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 104 106" width="16">
+                        <path fill="#231f20"
+                              d="M51.87 0C23.71 0 0 22.83 0 51v52.81l51.86-.05c28.16 0 51-23.71 51-51.87S80 0 51.87 0Z"/>
+                        <path fill="#fff9ae"
+                              d="M52.37 19.74a31.62 31.62 0 0 0-27.79 46.67l-5.72 18.4 20.54-4.64a31.61 31.61 0 1 0 13-60.43Z"/>
+                        <path fill="#00aeef"
+                              d="M77.45 32.12a31.6 31.6 0 0 1-38.05 48l-20.54 4.7 20.91-2.47a31.6 31.6 0 0 0 37.68-50.23Z"/>
+                        <path fill="#00a94f"
+                              d="M71.63 26.29A31.6 31.6 0 0 1 38.8 78l-19.94 6.82 20.54-4.65a31.6 31.6 0 0 0 32.23-53.88Z"/>
+                        <path fill="#f15d22"
+                              d="M26.47 67.11a31.61 31.61 0 0 1 51-35 31.61 31.61 0 0 0-52.89 34.3l-5.72 18.4Z"/>
+                        <path fill="#e31b23"
+                              d="M24.58 66.41a31.61 31.61 0 0 1 47.05-40.12 31.61 31.61 0 0 0-49 39.63l-3.76 18.9Z"/>
+                    </svg>
+                {:else}
+                    <span class="animate-spin mr-2">⟳</span>
+                {/if}
+                Discourse Login
             </Button>
             {#if errorMessage}
                 <p class="text-red-500 text-center mt-2">{errorMessage}</p>

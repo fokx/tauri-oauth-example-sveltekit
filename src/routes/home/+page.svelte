@@ -42,6 +42,7 @@
         </CardHeader>
         <CardContent class="flex flex-col items-center gap-6">
             <Avatar class="w-24 h-24">
+                Avatar: {user?.avatar}
                 {#if user?.avatar}
                     <AvatarImage src={user.avatar} alt={`${user.name}'s Avatar`}/>
                 {/if}
@@ -49,11 +50,11 @@
             </Avatar>
 
             <div class="text-center">
-                <p class="text-lg font-medium">{user?.name || 'Unknown User'}</p>
-                <p class="text-sm text-gray-500">{user?.email}</p>
+                <p class="text-lg font-medium">Name: {user?.name || 'Unknown User'}</p>
+                <p class="text-sm text-gray-500">Email: {user?.email}</p>
                 {#if user?.provider}
                     <p class="text-xs mt-1 bg-gray-100 px-2 py-1 rounded-full inline-block">
-                        {user.provider === 'google' ? 'Google' : 'GitHub'}
+                        Provider: {user.provider}
                     </p>
                 {/if}
             </div>
