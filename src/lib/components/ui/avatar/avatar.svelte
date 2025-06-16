@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { cn } from '$lib/utils';
-  
-  let className = '';
-  export { className as class };
+    import {cn} from '$lib/utils';
+
+    let className = '';
+    export {className as class};
 </script>
 
 <div
-  data-slot="avatar"
-  class={cn('relative flex size-8 shrink-0 overflow-hidden rounded-full', className)}
+        class={cn('relative flex size-8 shrink-0 overflow-hidden rounded-full', className)}
+        data-slot="avatar"
 >
-  <slot />
+    <slot/>
 </div>

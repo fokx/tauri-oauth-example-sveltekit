@@ -34,7 +34,9 @@
   },
   "plugins": {
     "oauth": {
-      "permissions": ["default"]
+      "permissions": [
+        "default"
+      ]
     },
     "http": {
       "scope": [
@@ -43,7 +45,9 @@
         "https://oauth2.googleapis.com/token",
         "https://www.googleapis.com/oauth2/v3/userinfo"
       ],
-      "permissions": ["default"]
+      "permissions": [
+        "default"
+      ]
     }
   }
 }
